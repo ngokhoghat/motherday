@@ -147,26 +147,24 @@ export default function EditScreen() {
   };
 
   const exportImg = async () => {
+    const domtoimage = require("dom-to-image");
+
     await setTarget(null);
     const div: any = document.getElementById("content");
-    let y, x;
 
     if (getMobileOperatingSystem() === "iOS") {
-      x = 10;
-      y = 380;
+      return (
+        await html2canvas(div, {
+          y: div.clientHeight - 120,
+          width: div.clientWidth,
+          height: div.clientHeight + 50,
+        })
+      ).toDataURL("image/png");
     } else if (getMobileOperatingSystem() === "Android") {
-      x = (div as HTMLElement).clientWidth + 30;
-      y = (div as HTMLElement).offsetHeight + 40;
+      return await domtoimage.toJpeg(div);
     } else {
-      y = 580;
+      return await domtoimage.toPng(div);
     }
-
-    return html2canvas(div, {
-      scale: 1,
-      width: (div as HTMLElement).clientWidth,
-      height: div.clientHeight,
-      y: y,
-    }).then((canvas) => canvas.toDataURL("image/png"));
   };
 
   return (
