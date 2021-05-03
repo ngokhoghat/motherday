@@ -22,9 +22,12 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
+const fonts = ["Josefin Sans", "Fantasy", "Dancing Script", "ZCOOL XiaoWei"];
+
 export default function EditScreen() {
   let history = useHistory();
   let query = useQuery();
+  const [font, setfont] = useState("Dancing Script");
   const [theme, settheme] = useState();
   const [isEdit, setIsEdit] = useState(false);
   const [editItem, setEditItem] = useState<any>(null);
@@ -89,7 +92,7 @@ export default function EditScreen() {
       return (
         <div
           className="move-able-item"
-          style={{ left: 150, top: 150 }}
+          style={{ left: 150, top: 150, fontFamily: font }}
           key={itemIdx}
           onClick={(e) => handleAdd(e, item)}
         >
@@ -97,7 +100,7 @@ export default function EditScreen() {
         </div>
       );
     });
-  }, [listText]);
+  }, [listText, font]);
 
   const addText = () => {
     const newArr: Array<any> = JSON.parse(JSON.stringify(listText));
@@ -129,6 +132,18 @@ export default function EditScreen() {
     });
 
     setlistText(newListText);
+  };
+
+  const handleChangeFont = () => {
+    let index = fonts.indexOf(font);
+
+    if (index === fonts.length - 1) {
+      index = 0;
+    } else {
+      index++;
+    }
+
+    setfont(fonts[index]);
   };
 
   const exportImg = async () => {
@@ -177,15 +192,26 @@ export default function EditScreen() {
           </div>
 
           <div className="edit-screen__main--button custom-input">
-            <div className="locale">Aa</div>
+            <div
+              className="locale"
+              style={{ fontFamily: font }}
+              onClick={handleChangeFont}
+            >
+              Aa
+            </div>
             {!isEdit ? (
-              <div className="text-input" onClick={addText}>
+              <div
+                className="text-input"
+                style={{ fontFamily: font }}
+                onClick={addText}
+              >
                 Click to enter text
               </div>
             ) : (
               <input
                 className="text-input"
                 type="text"
+                style={{ fontFamily: font }}
                 value={editItem?.text || ""}
                 onChange={handleChange}
                 onBlur={() => {
